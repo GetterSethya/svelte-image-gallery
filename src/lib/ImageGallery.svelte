@@ -94,8 +94,8 @@
   $: canSlideRight = infinite || (isRTL ? canSlidePrevious : canSlideNext);
 
   // component bindings. These vars are set from bindings in the HTML below
-  let imageGallery: HTMLElement;
-  let slideWrapper: SlideWrapper;
+  let imageGallery: HTMLElement | undefined;
+  let slideWrapper: SlideWrapper | undefined;
   let thumbnailWrapper: ThumbnailWrapper | undefined;
 
   const dispatch = createEventDispatcher();
@@ -296,6 +296,9 @@
   };
 
   $: _fullScreen = () => {
+    if (!imageGallery) {
+      return;
+    }
     if (useBrowserFullscreen) {
       _requestFullscreenAPI(imageGallery);
     } else {
@@ -377,7 +380,7 @@
       _play();
     }
     // Get parent element height on mount
-    if (imageGallery.parentElement) {
+    if (imageGallery?.parentElement) {
       parentElement = imageGallery.parentElement;
     }
     updateContainerHeight();
@@ -437,9 +440,11 @@
       galleryWidth = imageGallery.offsetWidth;
     }
 
-    const slideWrapperDiv = slideWrapper.getElem();
-    if (slideWrapperDiv) {
-      gallerySlideWrapperHeight = slideWrapperDiv.offsetHeight;
+    if (slideWrapper) {
+      const slideWrapperDiv = slideWrapper.getElem();
+      if (slideWrapperDiv) {
+        gallerySlideWrapperHeight = slideWrapperDiv.offsetHeight;
+      }
     }
   };
 
