@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import Item from '$lib/Item.svelte';
-  import type { TItem } from '$lib/types';
+  import Item from '../lib/Item.svelte';
+  import type { TItem } from '../lib/types';
 
   export let index: number;
   export let alignment: string;

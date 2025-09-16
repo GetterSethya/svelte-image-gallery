@@ -1,9 +1,9 @@
 <script>import "./app.css";
-import SlideWrapper from "./SlideWrapper.svelte";
-import ThumbnailWrapper from "./ThumbnailWrapper.svelte";
+import SlideWrapper from "../lib/SlideWrapper.svelte";
+import ThumbnailWrapper from "../lib/ThumbnailWrapper.svelte";
 import { createEventDispatcher, onMount } from "svelte";
 import { debounce } from "throttle-debounce";
-import { getIgClass, getIgContentClass, getSlideWrapperClass } from "./styling";
+import { getIgClass, getIgContentClass, getSlideWrapperClass } from "../lib/styling";
 export let flickThreshold = 0.4;
 export let items;
 export let showNav = true;

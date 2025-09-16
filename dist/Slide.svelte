@@ -1,5 +1,5 @@
 <script>import { createEventDispatcher } from "svelte";
-import Item from "./Item.svelte";
+import Item from "../lib/Item.svelte";
 export let index;
 export let alignment;
 export let originalClass;

@@ -1,4 +1,4 @@
-<script>import SVG from "./SVG.svelte";
+<script>import SVG from "../lib/SVG.svelte";
 import { createEventDispatcher } from "svelte";
 export let isPlaying;
 const dispatch = createEventDispatcher();

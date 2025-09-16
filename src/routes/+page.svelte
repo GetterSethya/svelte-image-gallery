@@ -1,7 +1,7 @@
 <script lang="ts">
   import './+page.css';
-  import ImageGallery from '$lib/ImageGallery.svelte';
-  import type { Position, TItem } from '$lib/types';
+  import ImageGallery from '../lib/ImageGallery.svelte';
+  import type { Position, TItem } from '../lib/types';
 
   let startIndex = 0;
   // TODO Once the ImageGallery supports rendering of custom items, we can showcase videos

@@ -1,11 +1,11 @@
 <script lang="ts">
   import './app.css';
   import type { Position, Direction, TItem, MouseOrKeyboard } from '$lib/types';
-  import SlideWrapper from '$lib/SlideWrapper.svelte';
-  import ThumbnailWrapper from '$lib/ThumbnailWrapper.svelte';
+  import SlideWrapper from '../lib/SlideWrapper.svelte';
+  import ThumbnailWrapper from '../lib/ThumbnailWrapper.svelte';
   import { createEventDispatcher, onMount } from 'svelte';
   import { debounce } from 'throttle-debounce';
-  import { getIgClass, getIgContentClass, getSlideWrapperClass } from '$lib/styling';
+  import { getIgClass, getIgContentClass, getSlideWrapperClass } from '../lib/styling';
 
   export let flickThreshold: number = 0.4;
   export let items: TItem[];

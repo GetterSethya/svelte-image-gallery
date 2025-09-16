@@ -1,5 +1,5 @@
 <script>import { createEventDispatcher } from "svelte";
-import SVG from "./SVG.svelte";
+import SVG from "../lib/SVG.svelte";
 export let isFullscreen;
 const dispatch = createEventDispatcher();
 </script>

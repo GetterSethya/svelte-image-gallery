@@ -1,5 +1,5 @@
 import { SvelteComponentTyped } from "svelte";
-import type { TItem } from './types';
+import type { TItem } from '../lib/types';
 declare const __propDef: {
     props: {
         index: number;

@@ -1,14 +1,14 @@
 <script lang="ts">
-  import type { TItem } from '$lib/types';
-  import LeftNav from '$lib/LeftNav.svelte';
-  import RightNav from '$lib/RightNav.svelte';
+  import type { TItem } from '../lib/types';
+  import LeftNav from '../lib/LeftNav.svelte';
+  import RightNav from '../lib/RightNav.svelte';
   import { createEventDispatcher } from 'svelte';
-  import Slide from '$lib/Slide.svelte';
-  import Bullet from '$lib/Bullet.svelte';
-  import Fullscreen from '$lib/Fullscreen.svelte';
-  import PlayPause from '$lib/PlayPause.svelte';
+  import Slide from '../lib/Slide.svelte';
+  import Bullet from '../lib/Bullet.svelte';
+  import Fullscreen from '../lib/Fullscreen.svelte';
+  import PlayPause from '../lib/PlayPause.svelte';
   import SwipeWrapper from './SwipeWrapper.svelte';
-  import { getAlignmentClassName, getBulletStyle, getSlideStyle } from '$lib/styling';
+  import { getAlignmentClassName, getBulletStyle, getSlideStyle } from '../lib/styling';
 
   // settings
   export let slideWrapperClass: string;
