@@ -13,7 +13,7 @@ const config = {
       lib: 'src/lib'
     }
   },
-  
+
   package: {
     dir: 'dist',
     emitTypes: true,

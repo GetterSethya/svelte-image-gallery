@@ -4,7 +4,6 @@ import ThumbnailWrapper from "./ThumbnailWrapper.svelte";
 import { createEventDispatcher, onMount } from "svelte";
 import { debounce } from "throttle-debounce";
 import { getIgClass, getIgContentClass, getSlideWrapperClass } from "./styling";
-import Slide from "./Slide.svelte";
 export let flickThreshold = 0.4;
 export let items;
 export let showNav = true;
@@ -84,6 +83,17 @@ let thumbnailWrapper;
 const dispatch = createEventDispatcher();
 let containerHeight;
 let parentElement;
+let screenOrientation = "";
+function handleOrientationChange() {
+  if (isFullscreen) {
+    updateContainerHeight();
+    handleResize();
+  }
+}
+$:
+  if (typeof window !== "undefined") {
+    screenOrientation = window.screen.orientation?.type || (window.innerHeight > window.innerWidth ? "portrait" : "landscape");
+  }
 function slideLeft() {
   slideTo(isRTL ? "right" : "left");
 }
@@ -113,7 +123,7 @@ export function slideToIndex(index) {
     isTransitioning = nextIndex !== currentIndex;
     previousIndex = currentIndex;
     currentIndex = nextIndex;
-    thumbnailWrapper.slideThumbnailBar(currentIndex);
+    thumbnailWrapper?.slideThumbnailBar(currentIndex);
     currentSlideOffset = 0;
     onSliding();
   }
@@ -138,7 +148,7 @@ $:
     transitionTimer = window.setTimeout(() => {
       if (isTransitioning) {
         isTransitioning = false;
-        thumbnailWrapper.resetSwipingThumbnail();
+        thumbnailWrapper?.resetSwipingThumbnail();
         dispatch("slide", { currentIndex });
       }
     }, slideDuration + 50);
@@ -305,7 +315,9 @@ onMount(async () => {
   if (autoPlay) {
     _play();
   }
-  parentElement = imageGallery.parentElement;
+  if (imageGallery.parentElement) {
+    parentElement = imageGallery.parentElement;
+  }
   updateContainerHeight();
   const resizeObserver = new ResizeObserver(() => {
     updateContainerHeight();
@@ -324,7 +336,7 @@ function initSlideWrapperResizeObserver() {
       if (!entries)
         return;
       entries.forEach((entry) => {
-        thumbnailWrapper.handleResizeWidth(entry.contentRect.width);
+        thumbnailWrapper?.handleResizeWidth(entry.contentRect.width);
         handleResize();
       });
     })
@@ -340,7 +352,7 @@ function initThumbnailWrapperResizeObserver() {
       if (!entries)
         return;
       entries.forEach((entry) => {
-        thumbnailWrapper.handleResizeHeight(entry.contentRect.height);
+        thumbnailWrapper?.handleResizeHeight(entry.contentRect.height);
         handleResize();
       });
     })
@@ -404,7 +416,9 @@ function updateContainerHeight() {
   role="region"
   bind:this={imageGallery}
   style={containInPage ? `max-height: ${containerHeight}px;` : ''}
-  class:contain-in-page={containInPage}
+  class:contain-in-page={containInPage || isFullscreen}
+  class:fullscreen-portrait={isFullscreen && screenOrientation.includes('portrait')}
+  class:fullscreen-landscape={isFullscreen && screenOrientation.includes('landscape')}
   on:keydown={!useWindowKeyDown ? handleKeyDown : undefined}
   on:mousedown={handleMouseDown}
 >
@@ -523,4 +537,45 @@ function updateContainerHeight() {
 <svelte:window
   on:keydown={useWindowKeyDown ? handleKeyDown : undefined}
   on:fullscreenchange={handleScreenChange}
+  on:orientationchange={handleOrientationChange}
+  on:resize={handleOrientationChange}
 />
+
+<style>
+  /* Fullscreen mobile styles */
+  .fullscreen-portrait :global(img) {
+    max-height: 100vh !important;
+    max-width: 100vw !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  .fullscreen-landscape :global(img) {
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* Ensure fullscreen container takes full viewport */
+  .fullscreen-portrait,
+  .fullscreen-landscape {
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Ensure content fills available space */
+  .fullscreen-portrait :global(.image-gallery-content),
+  .fullscreen-landscape :global(.image-gallery-content) {
+    width: 100% !important;
+    height: 100% !important;
+  }
+</style>

@@ -19,7 +19,9 @@
   const dispatch = createEventDispatcher();
 
   // Combine the base class with any additional classes from $$restProps
-  $: combinedClass = `image-gallery-image ${contain ? 'contain' : ''} ${$$restProps.class || ''}`.trim();
+  $: combinedClass = `image-gallery-image ${contain ? 'contain' : ''} ${
+    $$restProps.class || ''
+  }`.trim();
 </script>
 
 <img

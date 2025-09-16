@@ -28,6 +28,7 @@ declare const __propDef: {
         transitionStyle: string;
         swipingTransitionStyle: string;
         useTranslate3D: boolean;
+        containInPage?: boolean | undefined;
         getElem?: (() => HTMLElement) | undefined;
     };
     events: {

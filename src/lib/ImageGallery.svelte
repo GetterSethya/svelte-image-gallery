@@ -58,7 +58,7 @@
   $: transitionStyle = hardTransition ? noneTransitionStyle : defaultTransitionStyle;
 
   let currentIndex = startIndex;
-  let direction = '';
+  // let direction = '';
   $: {
     // this bit is quite ugly.
     // we set 'hardTransition' and then do the update a little bit later,
