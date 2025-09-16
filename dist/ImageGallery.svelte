@@ -45,7 +45,6 @@ $:
 $:
   transitionStyle = hardTransition ? noneTransitionStyle : defaultTransitionStyle;
 let currentIndex = startIndex;
-let direction = "";
 $: {
   hardTransition = true;
   currentIndex = startIndex;
@@ -100,8 +99,8 @@ function slideLeft() {
 function slideRight() {
   slideTo(isRTL ? "left" : "right");
 }
-function slideTo(direction2) {
-  const nextIndex = currentIndex + (direction2 === "left" ? -1 : 1);
+function slideTo(direction) {
+  const nextIndex = currentIndex + (direction === "left" ? -1 : 1);
   slideToIndex(nextIndex);
 }
 export function slideToIndex(index) {

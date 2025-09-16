@@ -99,13 +99,21 @@ function handleImageLoad(event) {
   }
 
   @keyframes slideFromRight {
-    from { transform: translateX(100%); }
-    to { transform: translateX(0); }
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
   }
 
   @keyframes slideFromLeft {
-    from { transform: translateX(-100%); }
-    to { transform: translateX(0); }
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
   }
 
   .image-gallery-slide {
@@ -115,24 +123,24 @@ function handleImageLoad(event) {
     align-items: center;
     justify-content: center;
   }
-  
+
   img {
     max-width: 100%;
   }
-  
+
   img.contain {
     object-fit: contain;
     height: auto;
     width: auto;
     max-height: 100%;
   }
-  
+
   /* Portrait specific handling */
   .portrait img.contain {
     max-height: 100%;
     width: auto;
   }
-  
+
   /* Landscape specific handling */
   .landscape img.contain {
     max-width: 100%;

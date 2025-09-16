@@ -1,7 +1,7 @@
 {
   "name": "@gettersethya/svelte-image-gallery",
   "version": "1.1.2",
-  "exports": "./dist/index.js",
+  "exports": "./mod.ts",
   "publish": {
     "include": ["dist", "package.json", "README.md", "LICENSE"]
   }
