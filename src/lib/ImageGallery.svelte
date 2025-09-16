@@ -6,7 +6,6 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { debounce } from 'throttle-debounce';
   import { getIgClass, getIgContentClass, getSlideWrapperClass } from '$lib/styling';
-  import Slide from './Slide.svelte';
 
   export let flickThreshold: number = 0.4;
   export let items: TItem[];
@@ -97,17 +96,17 @@
   // component bindings. These vars are set from bindings in the HTML below
   let imageGallery: HTMLElement;
   let slideWrapper: SlideWrapper;
-  let thumbnailWrapper: ThumbnailWrapper;
+  let thumbnailWrapper: ThumbnailWrapper | undefined;
 
   const dispatch = createEventDispatcher();
 
   // Add a reactive variable to track container height
-  let containerHeight: number;
+  let containerHeight: number | undefined;
   let parentElement: HTMLElement;
 
   // Add orientation change handling
   let screenOrientation: string = '';
-  
+
   function handleOrientationChange() {
     if (isFullscreen) {
       // Force a resize calculation when orientation changes
@@ -115,11 +114,12 @@
       handleResize();
     }
   }
-  
+
   // Update orientation on change
   $: if (typeof window !== 'undefined') {
-    screenOrientation = window.screen.orientation?.type || 
-                       (window.innerHeight > window.innerWidth ? 'portrait' : 'landscape');
+    screenOrientation =
+      window.screen.orientation?.type ||
+      (window.innerHeight > window.innerWidth ? 'portrait' : 'landscape');
   }
 
   function slideLeft() {
@@ -158,7 +158,7 @@
       isTransitioning = nextIndex !== currentIndex;
       previousIndex = currentIndex;
       currentIndex = nextIndex;
-      thumbnailWrapper.slideThumbnailBar(currentIndex);
+      thumbnailWrapper?.slideThumbnailBar(currentIndex);
       currentSlideOffset = 0;
       onSliding();
     }
@@ -190,7 +190,7 @@
         isTransitioning = false;
         // reset swiping thumbnail after transitioning to new slide,
         // so we can resume thumbnail auto translate
-        thumbnailWrapper.resetSwipingThumbnail();
+        thumbnailWrapper?.resetSwipingThumbnail();
         dispatch('slide', { currentIndex });
       }
     }, slideDuration + 50);
@@ -377,16 +377,18 @@
       _play();
     }
     // Get parent element height on mount
-    parentElement = imageGallery.parentElement;
+    if (imageGallery.parentElement) {
+      parentElement = imageGallery.parentElement;
+    }
     updateContainerHeight();
-    
+
     // Set up resize observer to update height when parent changes
     const resizeObserver = new ResizeObserver(() => {
       updateContainerHeight();
     });
-    
+
     resizeObserver.observe(parentElement);
-    
+
     return () => {
       resizeObserver.disconnect();
     };
@@ -401,7 +403,7 @@
       debounce(50, (entries: ResizeObserverEntry[]) => {
         if (!entries) return;
         entries.forEach((entry) => {
-          thumbnailWrapper.handleResizeWidth(entry.contentRect.width);
+          thumbnailWrapper?.handleResizeWidth(entry.contentRect.width);
           handleResize();
         });
       })
@@ -417,7 +419,7 @@
       debounce(50, (entries: ResizeObserverEntry[]) => {
         if (!entries) return;
         entries.forEach((entry) => {
-          thumbnailWrapper.handleResizeHeight(entry.contentRect.height);
+          thumbnailWrapper?.handleResizeHeight(entry.contentRect.height);
           handleResize();
         });
       })
@@ -472,9 +474,9 @@
       // Get parent height and subtract any margins/padding
       const parentRect = parentElement.getBoundingClientRect();
       const computedStyle = window.getComputedStyle(parentElement);
-      const verticalMargins = parseFloat(computedStyle.marginTop) + 
-                            parseFloat(computedStyle.marginBottom);
-      
+      const verticalMargins =
+        parseFloat(computedStyle.marginTop) + parseFloat(computedStyle.marginBottom);
+
       containerHeight = parentRect.height - verticalMargins;
     } else {
       containerHeight = undefined; // Use default height when not containing
@@ -606,6 +608,13 @@
   </div>
 </div>
 
+<svelte:window
+  on:keydown={useWindowKeyDown ? handleKeyDown : undefined}
+  on:fullscreenchange={handleScreenChange}
+  on:orientationchange={handleOrientationChange}
+  on:resize={handleOrientationChange}
+/>
+
 <style>
   /* Fullscreen mobile styles */
   .fullscreen-portrait :global(img) {
@@ -615,7 +624,7 @@
     height: auto !important;
     object-fit: contain !important;
   }
-  
+
   .fullscreen-landscape :global(img) {
     max-width: 100vw !important;
     max-height: 100vh !important;
@@ -623,7 +632,7 @@
     height: auto !important;
     object-fit: contain !important;
   }
-  
+
   /* Ensure fullscreen container takes full viewport */
   .fullscreen-portrait,
   .fullscreen-landscape {
@@ -636,7 +645,7 @@
     margin: 0 !important;
     padding: 0 !important;
   }
-  
+
   /* Ensure content fills available space */
   .fullscreen-portrait :global(.image-gallery-content),
   .fullscreen-landscape :global(.image-gallery-content) {
@@ -644,10 +653,3 @@
     height: 100% !important;
   }
 </style>
-
-<svelte:window
-  on:keydown={useWindowKeyDown ? handleKeyDown : undefined}
-  on:fullscreenchange={handleScreenChange}
-  on:orientationchange={handleOrientationChange}
-  on:resize={handleOrientationChange}
-/>
