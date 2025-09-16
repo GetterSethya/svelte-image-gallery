@@ -24,20 +24,17 @@ let thumbnailsWrapperWidth;
 let thumbnailsWrapperHeight;
 let thumbsElementScrollHeight;
 let thumbsElementScrollWidth;
-$:
-  isThumbnailVertical = thumbnailPosition === "left" || thumbnailPosition === "right";
+$: isThumbnailVertical = thumbnailPosition === "left" || thumbnailPosition === "right";
 let thumbsTranslate = 0;
 let thumbsSwipedTranslate = 0;
-$:
-  thumbsStyle = `transition: all ${isSwipingThumbnail ? swipingThumbnailTransitionDuration : slideDuration}ms ease-out;`;
-$:
-  thumbnailStyle = getThumbnailStyle(
-    isRTL,
-    thumbsTranslate,
-    isThumbnailVertical,
-    useTranslate3D,
-    thumbsStyle
-  );
+$: thumbsStyle = `transition: all ${isSwipingThumbnail ? swipingThumbnailTransitionDuration : slideDuration}ms ease-out;`;
+$: thumbnailStyle = getThumbnailStyle(
+  isRTL,
+  thumbsTranslate,
+  isThumbnailVertical,
+  useTranslate3D,
+  thumbsStyle
+);
 export function resetSwipingThumbnail() {
   isSwipedThumbnail = false;
 }
@@ -83,17 +80,15 @@ export function slideThumbnailBar(newIndex) {
     thumbsSwipedTranslate = nextTranslate;
   }
 }
-$:
-  getThumbnailBarHeight = () => {
-    if (isThumbnailVertical) {
-      return `height: ${gallerySlideWrapperHeight}px;`;
-    }
-    return "";
-  };
-$:
-  igThumbnailClasses = items.map(
-    (item, index) => getIgThumbnailClass(index, currentIndex, item.thumbnailClass)
-  );
+$: getThumbnailBarHeight = () => {
+  if (isThumbnailVertical) {
+    return `height: ${gallerySlideWrapperHeight}px;`;
+  }
+  return "";
+};
+$: igThumbnailClasses = items.map(
+  (item, index) => getIgThumbnailClass(index, currentIndex, item.thumbnailClass)
+);
 const dispatch = createEventDispatcher();
 export function resetThumbnailPosition() {
   if (thumbnails) {

@@ -7,8 +7,6 @@ export let slideStyle;
 export let showItem;
 export let item;
 export let isFullscreen;
-export let src = "";
-export let alt = "";
 export let active = false;
 export let direction = "";
 export let containInPage = false;
@@ -23,7 +21,9 @@ function handleSlideKeyUp(event) {
 }
 function handleImageLoad(event) {
   const img = event.target;
-  isPortrait = img.naturalHeight > img.naturalWidth;
+  if (img && img.naturalHeight && img.naturalWidth) {
+    isPortrait = img.naturalHeight > img.naturalWidth;
+  }
 }
 </script>
 
@@ -84,12 +84,6 @@ function handleImageLoad(event) {
     opacity: 1;
   }
 
-  .slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
   .slide-next {
     animation: slideFromRight 0.5s ease;
   }
@@ -122,28 +116,5 @@ function handleImageLoad(event) {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  img {
-    max-width: 100%;
-  }
-
-  img.contain {
-    object-fit: contain;
-    height: auto;
-    width: auto;
-    max-height: 100%;
-  }
-
-  /* Portrait specific handling */
-  .portrait img.contain {
-    max-height: 100%;
-    width: auto;
-  }
-
-  /* Landscape specific handling */
-  .landscape img.contain {
-    max-width: 100%;
-    height: auto;
   }
 </style>

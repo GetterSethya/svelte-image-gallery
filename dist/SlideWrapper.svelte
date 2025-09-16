@@ -35,78 +35,64 @@ export let swipingTransitionStyle;
 export let useTranslate3D;
 export let containInPage = false;
 let isSwiping = false;
-$:
-  currentTransitionStyle = isSwiping ? swipingTransitionStyle : transitionStyle;
-$:
-  canSlide = items.length >= 2;
-$:
-  canSlidePrevious = currentIndex > 0;
-$:
-  canSlideNext = currentIndex < items.length - 1;
-$:
-  canSlideLeft = infinite || (isRTL ? canSlideNext : canSlidePrevious);
-$:
-  canSlideRight = infinite || (isRTL ? canSlidePrevious : canSlideNext);
+$: currentTransitionStyle = isSwiping ? swipingTransitionStyle : transitionStyle;
+$: canSlide = items.length >= 2;
+$: canSlidePrevious = currentIndex > 0;
+$: canSlideNext = currentIndex < items.length - 1;
+$: canSlideLeft = infinite || (isRTL ? canSlideNext : canSlidePrevious);
+$: canSlideRight = infinite || (isRTL ? canSlidePrevious : canSlideNext);
 let elem;
 export function getElem() {
   return elem;
 }
 const dispatch = createEventDispatcher();
-$:
-  slideIsTransitioning = (index) => {
-    const indexIsNotPreviousOrNextSlide = !(index === previousIndex || index === currentIndex);
-    return isTransitioning && indexIsNotPreviousOrNextSlide;
-  };
-$:
-  ignoreIsTransitioning = () => {
-    const totalSlides = items.length - 1;
-    const slidingMoreThanOneSlideLeftOrRight = Math.abs(previousIndex - currentIndex) > 1;
-    const notGoingFromFirstToLast = !(previousIndex === 0 && currentIndex === totalSlides);
-    const notGoingFromLastToFirst = !(previousIndex === totalSlides && currentIndex === 0);
-    return slidingMoreThanOneSlideLeftOrRight && notGoingFromFirstToLast && notGoingFromLastToFirst;
-  };
-$:
-  isFirstOrLastSlide = (index) => {
-    const totalSlides = items.length - 1;
-    const isLastSlide = index === totalSlides;
-    const isFirstSlide = index === 0;
-    return isLastSlide || isFirstSlide;
-  };
-$:
-  isSlideVisible = (index) => {
-    return !slideIsTransitioning(index) || ignoreIsTransitioning() && !isFirstOrLastSlide(index);
-  };
-$:
-  alignmentClasses = items.map(
-    (_, index) => getAlignmentClassName(index, currentIndex, infinite, items.length)
-  );
-$:
-  slideStyles = items.map(
-    (_, index) => getSlideStyle(
-      index,
-      currentIndex,
-      previousIndex,
-      items.length,
-      isRTL,
-      currentSlideOffset,
-      infinite,
-      isSlideVisible(index),
-      currentTransitionStyle,
-      useTranslate3D
-    )
-  );
-$:
-  bulletStyles = items.map(
-    (item, index) => getBulletStyle(index, currentIndex, item.bulletClass)
-  );
-$:
-  showItems = items.map((_, index) => {
-    const showItem = !lazyLoad || !!alignmentClasses[index] || lazyLoaded[index];
-    if (showItem && lazyLoad && !lazyLoaded[index]) {
-      dispatch("lazyload", index);
-    }
-    return showItem;
-  });
+$: slideIsTransitioning = (index) => {
+  const indexIsNotPreviousOrNextSlide = !(index === previousIndex || index === currentIndex);
+  return isTransitioning && indexIsNotPreviousOrNextSlide;
+};
+$: ignoreIsTransitioning = () => {
+  const totalSlides = items.length - 1;
+  const slidingMoreThanOneSlideLeftOrRight = Math.abs(previousIndex - currentIndex) > 1;
+  const notGoingFromFirstToLast = !(previousIndex === 0 && currentIndex === totalSlides);
+  const notGoingFromLastToFirst = !(previousIndex === totalSlides && currentIndex === 0);
+  return slidingMoreThanOneSlideLeftOrRight && notGoingFromFirstToLast && notGoingFromLastToFirst;
+};
+$: isFirstOrLastSlide = (index) => {
+  const totalSlides = items.length - 1;
+  const isLastSlide = index === totalSlides;
+  const isFirstSlide = index === 0;
+  return isLastSlide || isFirstSlide;
+};
+$: isSlideVisible = (index) => {
+  return !slideIsTransitioning(index) || ignoreIsTransitioning() && !isFirstOrLastSlide(index);
+};
+$: alignmentClasses = items.map(
+  (_, index) => getAlignmentClassName(index, currentIndex, infinite, items.length)
+);
+$: slideStyles = items.map(
+  (_, index) => getSlideStyle(
+    index,
+    currentIndex,
+    previousIndex,
+    items.length,
+    isRTL,
+    currentSlideOffset,
+    infinite,
+    isSlideVisible(index),
+    currentTransitionStyle,
+    useTranslate3D
+  )
+);
+$: bulletStyles = items.map(
+  (item, index) => getBulletStyle(index, currentIndex, item.bulletClass)
+);
+$: showItems = items.map((_, index) => {
+  const showItem = !lazyLoad || !!alignmentClasses[index] || lazyLoaded[index];
+  if (showItem && lazyLoad && !lazyLoaded[index]) {
+    dispatch("lazyload", index);
+  }
+  return showItem;
+});
 </script>
 
 <div class={slideWrapperClass} bind:this={elem}>

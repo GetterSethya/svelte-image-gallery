@@ -29,8 +29,7 @@ function resetSwipingDirection() {
   }
 }
 function handleThumbnailSwiping({ event, absX, absY, dir }) {
-  if (disableThumbnailSwipe)
-    return;
+  if (disableThumbnailSwipe) return;
   if (isThumbnailVertical) {
     if ((dir === LEFT || dir === RIGHT || swipingLeftRight) && !swipingUpDown) {
       if (!swipingLeftRight) {
@@ -82,8 +81,7 @@ function handleThumbnailSwiping({ event, absX, absY, dir }) {
   if ((dir === RIGHT || dir === DOWN) && hasSwipedPassedStart) {
     return;
   }
-  if (stopPropagation)
-    event.stopPropagation();
+  if (stopPropagation) event.stopPropagation();
   if (isThumbnailVertical) {
     dispatch("thumbsslideoffset", slideY);
   } else {
@@ -91,19 +89,17 @@ function handleThumbnailSwiping({ event, absX, absY, dir }) {
   }
 }
 function handleOnThumbnailSwiped() {
-  if (disableThumbnailSwipe)
-    return;
+  if (disableThumbnailSwipe) return;
   resetSwipingDirection();
   dispatch("thumbnailswiped");
 }
-$:
-  cls = clsx(
-    "image-gallery-thumbnails-wrapper",
-    getThumbnailPositionClassName(thumbnailPosition),
-    { "thumbnails-wrapper-rtl": !isThumbnailVertical && isRTL },
-    { "thumbnails-swipe-horizontal": !isThumbnailVertical && !disableThumbnailSwipe },
-    { "thumbnails-swipe-vertical": isThumbnailVertical && !disableThumbnailSwipe }
-  );
+$: cls = clsx(
+  "image-gallery-thumbnails-wrapper",
+  getThumbnailPositionClassName(thumbnailPosition),
+  { "thumbnails-wrapper-rtl": !isThumbnailVertical && isRTL },
+  { "thumbnails-swipe-horizontal": !isThumbnailVertical && !disableThumbnailSwipe },
+  { "thumbnails-swipe-vertical": isThumbnailVertical && !disableThumbnailSwipe }
+);
 </script>
 
 <div

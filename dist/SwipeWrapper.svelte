@@ -21,8 +21,7 @@ export let isTransitioning;
 let swipingLeftRight;
 let swipingUpDown;
 let currentSlideOffset;
-$:
-  dispatch("slideoffsetchanged", currentSlideOffset);
+$: dispatch("slideoffsetchanged", currentSlideOffset);
 function handleSwiping({ event, absX, dir }) {
   if ((dir === UP || dir === DOWN || swipingUpDown) && !swipingLeftRight) {
     if (!swipingUpDown) {
@@ -33,8 +32,7 @@ function handleSwiping({ event, absX, dir }) {
   if ((dir === LEFT || dir === RIGHT) && !swipingLeftRight) {
     swipingLeftRight = true;
   }
-  if (disableSwipe)
-    return;
+  if (disableSwipe) return;
   if (stopPropagation) {
     event.preventDefault();
   }
@@ -61,10 +59,8 @@ function resetSwipingDirection() {
   }
 }
 function handleSwiped({ event, dir, velocity }) {
-  if (disableSwipe)
-    return;
-  if (stopPropagation)
-    event.stopPropagation();
+  if (disableSwipe) return;
+  if (stopPropagation) event.stopPropagation();
   resetSwipingDirection();
   const swipeDirection = (dir === LEFT ? 1 : -1) * (isRTL ? -1 : 1);
   const isSwipeUpOrDown = dir === UP || dir === DOWN;

@@ -373,7 +373,7 @@
   $: igContentClass = getIgContentClass(isFullscreen, thumbnailPosition);
   $: slideWrapperClass = getSlideWrapperClass(isRTL, thumbnailPosition);
 
-  onMount(async () => {
+  onMount(() => {
     initSlideWrapperResizeObserver();
     initThumbnailWrapperResizeObserver();
     if (autoPlay) {
@@ -398,9 +398,6 @@
   });
 
   function initSlideWrapperResizeObserver() {
-    if (!slideWrapper) {
-      return;
-    }
     // keeps track of gallery height changes for vertical thumbnail height
     resizeSlideWrapperObserver = new ResizeObserver(
       debounce(50, (entries: ResizeObserverEntry[]) => {
@@ -411,7 +408,9 @@
         });
       })
     );
-    resizeSlideWrapperObserver.observe(slideWrapper.getElem());
+    if (slideWrapper && slideWrapper.getElem) {
+      resizeSlideWrapperObserver.observe(slideWrapper.getElem());
+    }
   }
 
   function initThumbnailWrapperResizeObserver() {
@@ -440,7 +439,7 @@
       galleryWidth = imageGallery.offsetWidth;
     }
 
-    if (slideWrapper) {
+    if (slideWrapper && slideWrapper.getElem) {
       const slideWrapperDiv = slideWrapper.getElem();
       if (slideWrapperDiv) {
         gallerySlideWrapperHeight = slideWrapperDiv.offsetHeight;
@@ -489,7 +488,9 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <div
+  tabindex="-1"
   class={igClass}
   aria-live="polite"
   role="region"

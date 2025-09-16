@@ -1,6 +1,6 @@
 {
   "name": "@gettersethya/svelte-image-gallery",
-  "version": "1.1.7",
+  "version": "1.1.9",
   "author": "Getter Sethya",
   "license": "MIT",
   "description": "Svelte image gallery ported from react-image-gallery",
@@ -16,11 +16,13 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write ."
+    "format": "prettier --plugin-search-dir . --write .",
+    "package": "npx svelte-package"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.9",
     "@sveltejs/kit": "~2.5.28",
+    "@sveltejs/package": "^2.5.2",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@types/throttle-debounce": "~5.0.0",
     "@typescript-eslint/eslint-plugin": "~5.45.0",
@@ -41,7 +43,8 @@
     "@react2svelte/swipable": "^0.1.4",
     "@react2svelte/swipeable": "^0.1.4",
     "clsx": "^1.2.1",
-    "throttle-debounce": "^5.0.0"
+    "throttle-debounce": "^5.0.0",
+    "svelte":"^4.2.20"
   },
   "exports": {
     ".": {

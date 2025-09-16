@@ -37,13 +37,10 @@ export let isRTL = false;
 export let useWindowKeyDown = true;
 export let containInPage = false;
 let hardTransition = false;
-$:
-  defaultTransitionStyle = `transform ${slideDuration}ms ease-out`;
+$: defaultTransitionStyle = `transform ${slideDuration}ms ease-out`;
 let noneTransitionStyle = "none";
-$:
-  swipingTransitionStyle = `transform ${swipingTransitionDuration}ms ease-out`;
-$:
-  transitionStyle = hardTransition ? noneTransitionStyle : defaultTransitionStyle;
+$: swipingTransitionStyle = `transform ${swipingTransitionDuration}ms ease-out`;
+$: transitionStyle = hardTransition ? noneTransitionStyle : defaultTransitionStyle;
 let currentIndex = startIndex;
 $: {
   hardTransition = true;
@@ -68,14 +65,10 @@ let thumbnailMouseOverTimer = null;
 let lazyLoaded = [];
 let imageLoaded = [];
 let currentlyUsingMouseOrKeyboard = "mouse";
-$:
-  canSlidePrevious = currentIndex > 0;
-$:
-  canSlideNext = currentIndex < items.length - 1;
-$:
-  canSlideLeft = infinite || (isRTL ? canSlideNext : canSlidePrevious);
-$:
-  canSlideRight = infinite || (isRTL ? canSlidePrevious : canSlideNext);
+$: canSlidePrevious = currentIndex > 0;
+$: canSlideNext = currentIndex < items.length - 1;
+$: canSlideLeft = infinite || (isRTL ? canSlideNext : canSlidePrevious);
+$: canSlideRight = infinite || (isRTL ? canSlidePrevious : canSlideNext);
 let imageGallery;
 let slideWrapper;
 let thumbnailWrapper;
@@ -89,10 +82,9 @@ function handleOrientationChange() {
     handleResize();
   }
 }
-$:
-  if (typeof window !== "undefined") {
-    screenOrientation = window.screen.orientation?.type || (window.innerHeight > window.innerWidth ? "portrait" : "landscape");
-  }
+$: if (typeof window !== "undefined") {
+  screenOrientation = window.screen.orientation?.type || (window.innerHeight > window.innerWidth ? "portrait" : "landscape");
+}
 function slideLeft() {
   slideTo(isRTL ? "right" : "left");
 }
@@ -142,20 +134,18 @@ export function exitFullScreen() {
 export function getCurrentIndex() {
   return currentIndex;
 }
-$:
-  onSliding = () => {
-    transitionTimer = window.setTimeout(() => {
-      if (isTransitioning) {
-        isTransitioning = false;
-        thumbnailWrapper?.resetSwipingThumbnail();
-        dispatch("slide", { currentIndex });
-      }
-    }, slideDuration + 50);
-  };
+$: onSliding = () => {
+  transitionTimer = window.setTimeout(() => {
+    if (isTransitioning) {
+      isTransitioning = false;
+      thumbnailWrapper?.resetSwipingThumbnail();
+      dispatch("slide", { currentIndex });
+    }
+  }, slideDuration + 50);
+};
 function handleKeyDown(event) {
   currentlyUsingMouseOrKeyboard = "keyboard";
-  if (disableKeyDown)
-    return;
+  if (disableKeyDown) return;
   switch (event.code) {
     case "ArrowLeft":
       if (canSlideLeft) {
@@ -179,142 +169,130 @@ function handleKeyDown(event) {
 function handleMouseDown() {
   currentlyUsingMouseOrKeyboard = "mouse";
 }
-$:
-  togglePlay = () => {
-    if (playPauseIntervalId) {
-      _pause();
-    } else {
-      _play();
+$: togglePlay = () => {
+  if (playPauseIntervalId) {
+    _pause();
+  } else {
+    _play();
+  }
+};
+$: pauseOrPlay = () => {
+  if (!infinite && !canSlideRight) {
+    _pause();
+  } else {
+    slideToIndex(currentIndex + 1);
+  }
+};
+$: _play = (shouldCallOnPlay = true) => {
+  if (!playPauseIntervalId) {
+    isPlaying = true;
+    playPauseIntervalId = window.setInterval(pauseOrPlay, Math.max(slideInterval, slideDuration));
+    if (shouldCallOnPlay) {
+      dispatch("play", { currentIndex });
     }
-  };
-$:
-  pauseOrPlay = () => {
-    if (!infinite && !canSlideRight) {
-      _pause();
-    } else {
-      slideToIndex(currentIndex + 1);
+  }
+};
+$: _pause = (shouldCallOnPause = true) => {
+  if (playPauseIntervalId) {
+    window.clearInterval(playPauseIntervalId);
+    playPauseIntervalId = null;
+    isPlaying = false;
+    if (shouldCallOnPause) {
+      dispatch("pause", { currentIndex });
     }
-  };
-$:
-  _play = (shouldCallOnPlay = true) => {
-    if (!playPauseIntervalId) {
-      isPlaying = true;
-      playPauseIntervalId = window.setInterval(pauseOrPlay, Math.max(slideInterval, slideDuration));
-      if (shouldCallOnPlay) {
-        dispatch("play", { currentIndex });
-      }
-    }
-  };
-$:
-  _pause = (shouldCallOnPause = true) => {
-    if (playPauseIntervalId) {
-      window.clearInterval(playPauseIntervalId);
-      playPauseIntervalId = null;
-      isPlaying = false;
-      if (shouldCallOnPause) {
-        dispatch("pause", { currentIndex });
-      }
-    }
-  };
-$:
-  toggleFullscreen = () => {
-    if (isFullscreen) {
-      _exitFullScreen();
-    } else {
-      _fullScreen();
-    }
-  };
-$:
-  _requestFullscreenAPI = (element) => {
-    if (element.requestFullscreen) {
-      element.requestFullscreen();
-    } else if (element.mozRequestFullScreen) {
-      element.mozRequestFullScreen();
-    } else if (element.webkitRequestFullscreen) {
-      element.webkitRequestFullscreen();
-    } else if (element.msRequestFullscreen) {
-      element.msRequestFullscreen();
-    }
-  };
-$:
-  _exitFullScreenAPI = () => {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if (document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-      document.msExitFullscreen();
-    }
-  };
-$:
-  _fullScreen = () => {
+  }
+};
+$: toggleFullscreen = () => {
+  if (isFullscreen) {
+    _exitFullScreen();
+  } else {
+    _fullScreen();
+  }
+};
+$: _requestFullscreenAPI = (element) => {
+  if (element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if (element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if (element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  }
+};
+$: _exitFullScreenAPI = () => {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) {
+    document.msExitFullscreen();
+  }
+};
+$: _fullScreen = () => {
+  if (!imageGallery) {
+    return;
+  }
+  if (useBrowserFullscreen) {
+    _requestFullscreenAPI(imageGallery);
+  } else {
+    modalFullscreen = true;
+  }
+  isFullscreen = true;
+  if (thumbnailWrapper) {
+    thumbnailWrapper.slideThumbnailBar(currentIndex);
+  }
+  dispatch("screenchange", { fullscreen: true });
+};
+$: _exitFullScreen = () => {
+  if (isFullscreen) {
     if (useBrowserFullscreen) {
-      _requestFullscreenAPI(imageGallery);
+      _exitFullScreenAPI();
     } else {
-      modalFullscreen = true;
+      modalFullscreen = false;
     }
-    isFullscreen = true;
-    if (thumbnailWrapper) {
-      thumbnailWrapper.slideThumbnailBar(currentIndex);
-    }
-    dispatch("screenchange", { fullscreen: true });
-  };
-$:
-  _exitFullScreen = () => {
-    if (isFullscreen) {
-      if (useBrowserFullscreen) {
-        _exitFullScreenAPI();
-      } else {
-        modalFullscreen = false;
-      }
-      isFullscreen = false;
-      slideToIndex(0);
-      dispatch("screenchange", { fullscreen: false });
-    }
-  };
-$:
-  handleImageLoad = (customEvent) => {
-    const index = customEvent.detail.index;
-    const event = customEvent.detail.event;
-    const imageExists = imageLoaded[index];
-    if (!imageExists) {
-      imageLoaded[index] = true;
-      dispatch("imageload", { index, event });
-    }
-  };
-$:
-  handleImageError = (customEvent) => {
-    const index = customEvent.detail.index;
-    const event = customEvent.detail.event;
-    if (onErrorImageURL && !event.target.src.includes(onErrorImageURL)) {
-      event.target.src = onErrorImageURL;
-    }
-    dispatch("imageerror", { index, event });
-  };
-$:
-  handleScreenChange = () => {
-    const fullScreenElement = document.fullscreenElement;
-    const _isFullscreen = imageGallery === fullScreenElement;
-    dispatch("screenchange", { fullscreen: _isFullscreen });
-    if (useBrowserFullscreen) {
-      isFullscreen = _isFullscreen;
-    }
-  };
-$:
-  igClass = getIgClass(modalFullscreen, additionalClass, currentlyUsingMouseOrKeyboard);
-$:
-  igContentClass = getIgContentClass(isFullscreen, thumbnailPosition);
-$:
-  slideWrapperClass = getSlideWrapperClass(isRTL, thumbnailPosition);
-onMount(async () => {
+    isFullscreen = false;
+    slideToIndex(0);
+    dispatch("screenchange", { fullscreen: false });
+  }
+};
+$: handleImageLoad = (customEvent) => {
+  const index = customEvent.detail.index;
+  const event = customEvent.detail.event;
+  const imageExists = imageLoaded[index];
+  if (!imageExists) {
+    imageLoaded[index] = true;
+    dispatch("imageload", { index, event });
+  }
+};
+$: handleImageError = (customEvent) => {
+  const index = customEvent.detail.index;
+  const event = customEvent.detail.event;
+  if (onErrorImageURL && !event.target.src.includes(onErrorImageURL)) {
+    event.target.src = onErrorImageURL;
+  }
+  dispatch("imageerror", { index, event });
+};
+$: handleScreenChange = () => {
+  const fullScreenElement = document.fullscreenElement;
+  const _isFullscreen = imageGallery === fullScreenElement;
+  dispatch("screenchange", { fullscreen: _isFullscreen });
+  if (useBrowserFullscreen) {
+    isFullscreen = _isFullscreen;
+  }
+};
+$: igClass = getIgClass(modalFullscreen, additionalClass, currentlyUsingMouseOrKeyboard);
+$: igContentClass = getIgContentClass(isFullscreen, thumbnailPosition);
+$: slideWrapperClass = getSlideWrapperClass(isRTL, thumbnailPosition);
+onMount(() => {
   initSlideWrapperResizeObserver();
   initThumbnailWrapperResizeObserver();
   if (autoPlay) {
     _play();
   }
-  if (imageGallery.parentElement) {
+  if (imageGallery?.parentElement) {
     parentElement = imageGallery.parentElement;
   }
   updateContainerHeight();
@@ -327,20 +305,18 @@ onMount(async () => {
   };
 });
 function initSlideWrapperResizeObserver() {
-  if (!slideWrapper) {
-    return;
-  }
   resizeSlideWrapperObserver = new ResizeObserver(
     debounce(50, (entries) => {
-      if (!entries)
-        return;
+      if (!entries) return;
       entries.forEach((entry) => {
         thumbnailWrapper?.handleResizeWidth(entry.contentRect.width);
         handleResize();
       });
     })
   );
-  resizeSlideWrapperObserver.observe(slideWrapper.getElem());
+  if (slideWrapper && slideWrapper.getElem) {
+    resizeSlideWrapperObserver.observe(slideWrapper.getElem());
+  }
 }
 function initThumbnailWrapperResizeObserver() {
   if (!thumbnailWrapper) {
@@ -348,8 +324,7 @@ function initThumbnailWrapperResizeObserver() {
   }
   resizeThumbnailWrapperObserver = new ResizeObserver(
     debounce(50, (entries) => {
-      if (!entries)
-        return;
+      if (!entries) return;
       entries.forEach((entry) => {
         thumbnailWrapper?.handleResizeHeight(entry.contentRect.height);
         handleResize();
@@ -358,45 +333,43 @@ function initThumbnailWrapperResizeObserver() {
   );
   resizeThumbnailWrapperObserver.observe(thumbnailWrapper.getElem());
 }
-$:
-  handleResize = () => {
-    if (!imageGallery) {
-      return;
-    }
-    if (imageGallery) {
-      galleryWidth = imageGallery.offsetWidth;
-    }
+$: handleResize = () => {
+  if (!imageGallery) {
+    return;
+  }
+  if (imageGallery) {
+    galleryWidth = imageGallery.offsetWidth;
+  }
+  if (slideWrapper && slideWrapper.getElem) {
     const slideWrapperDiv = slideWrapper.getElem();
     if (slideWrapperDiv) {
       gallerySlideWrapperHeight = slideWrapperDiv.offsetHeight;
     }
-  };
-$:
-  onThumbnailMouseOver = (event) => {
-    const index = event.detail;
-    if (thumbnailMouseOverTimer) {
-      window.clearTimeout(thumbnailMouseOverTimer);
-      thumbnailMouseOverTimer = null;
+  }
+};
+$: onThumbnailMouseOver = (event) => {
+  const index = event.detail;
+  if (thumbnailMouseOverTimer) {
+    window.clearTimeout(thumbnailMouseOverTimer);
+    thumbnailMouseOverTimer = null;
+  }
+  thumbnailMouseOverTimer = window.setTimeout(() => {
+    slideToIndex(index);
+    _pause();
+  }, 300);
+};
+$: onThumbnailMouseLeave = () => {
+  if (thumbnailMouseOverTimer) {
+    window.clearTimeout(thumbnailMouseOverTimer);
+    thumbnailMouseOverTimer = null;
+    if (autoPlay) {
+      _play();
     }
-    thumbnailMouseOverTimer = window.setTimeout(() => {
-      slideToIndex(index);
-      _pause();
-    }, 300);
-  };
-$:
-  onThumbnailMouseLeave = () => {
-    if (thumbnailMouseOverTimer) {
-      window.clearTimeout(thumbnailMouseOverTimer);
-      thumbnailMouseOverTimer = null;
-      if (autoPlay) {
-        _play();
-      }
-    }
-  };
-$:
-  onLazyLoad = (event) => {
-    lazyLoaded[event.detail] = true;
-  };
+  }
+};
+$: onLazyLoad = (event) => {
+  lazyLoaded[event.detail] = true;
+};
 function updateContainerHeight() {
   if (containInPage && parentElement) {
     const parentRect = parentElement.getBoundingClientRect();
@@ -409,7 +382,9 @@ function updateContainerHeight() {
 }
 </script>
 
+<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 <div
+  tabindex="-1"
   class={igClass}
   aria-live="polite"
   role="region"

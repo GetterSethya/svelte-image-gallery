@@ -13,15 +13,6 @@ const config = {
       lib: 'src/lib'
     }
   },
-
-  package: {
-    dir: 'dist',
-    emitTypes: true,
-    exports: (filepath) => {
-      // Only include files from src/lib
-      return filepath.startsWith('src/lib/');
-    }
-  }
 };
 
 export default config;

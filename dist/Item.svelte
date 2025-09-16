@@ -13,8 +13,7 @@ export let loading = "eager";
 export let contain = false;
 const itemSrc = isFullscreen ? fullscreen || original : original;
 const dispatch = createEventDispatcher();
-$:
-  combinedClass = `image-gallery-image ${contain ? "contain" : ""} ${$$restProps.class || ""}`.trim();
+$: combinedClass = `image-gallery-image ${contain ? "contain" : ""} ${$$restProps.class || ""}`.trim();
 </script>
 
 <img
