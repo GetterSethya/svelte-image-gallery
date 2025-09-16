@@ -1,2 +1,2 @@
-import ImageGallery from '../lib/ImageGallery.svelte';
+import ImageGallery from './ImageGallery.svelte';
 export default ImageGallery;

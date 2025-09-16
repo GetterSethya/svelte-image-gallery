@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import type { TItem } from '../lib/types';
+  import type { TItem } from '$lib/types';
 
   export let index: number;
   export let currentIndex: number;

@@ -1,5 +1,5 @@
 import { SvelteComponentTyped } from "svelte";
-import type { Position, TItem } from '../lib/types';
+import type { Position, TItem } from './types';
 declare const __propDef: {
     props: {
         items: TItem[];

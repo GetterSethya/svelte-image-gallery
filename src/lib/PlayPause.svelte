@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SVG from '../lib/SVG.svelte';
+  import SVG from '$lib/SVG.svelte';
   import { createEventDispatcher } from 'svelte';
 
   export let isPlaying: boolean;

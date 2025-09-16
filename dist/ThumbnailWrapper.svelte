@@ -1,6 +1,6 @@
-<script>import Thumbnail from "../lib/Thumbnail.svelte";
+<script>import Thumbnail from "./Thumbnail.svelte";
 import { createEventDispatcher } from "svelte";
-import { getIgThumbnailClass, getThumbnailStyle, getThumbsTranslate } from "../lib/styling";
+import { getIgThumbnailClass, getThumbnailStyle, getThumbsTranslate } from "./styling";
 import ThumbnailSwipeWrapper from "./ThumbnailSwipeWrapper.svelte";
 export let items;
 export let currentIndex;

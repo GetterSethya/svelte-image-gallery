@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import SVG from '../lib/SVG.svelte';
+  import SVG from '$lib/SVG.svelte';
 
   export let isFullscreen: boolean;
 

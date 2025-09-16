@@ -1,4 +1,4 @@
-import type { MouseOrKeyboard, Position } from '../lib/types';
+import type { MouseOrKeyboard, Position } from '$lib/types';
 import clsx from 'clsx';
 
 export const getThumbnailPositionClassName = (thumbnailPosition: Position) => {

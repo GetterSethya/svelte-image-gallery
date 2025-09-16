@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { Position, TItem } from '../lib/types';
-  import Thumbnail from '../lib/Thumbnail.svelte';
+  import type { Position, TItem } from '$lib/types';
+  import Thumbnail from '$lib/Thumbnail.svelte';
   import { createEventDispatcher } from 'svelte';
-  import { getIgThumbnailClass, getThumbnailStyle, getThumbsTranslate } from '../lib/styling';
+  import { getIgThumbnailClass, getThumbnailStyle, getThumbsTranslate } from '$lib/styling';
   import ThumbnailSwipeWrapper from './ThumbnailSwipeWrapper.svelte';
 
   // settings

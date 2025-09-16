@@ -1,4 +1,4 @@
-import type { MouseOrKeyboard, Position } from '../lib/types';
+import type { MouseOrKeyboard, Position } from './types';
 export declare const getThumbnailPositionClassName: (thumbnailPosition: Position) => string;
 export declare const getThumbsTranslate: (thumbsElement: HTMLElement, indexDifference: number, disableThumbnailScroll: boolean, thumbnailsWrapperWidth: number, thumbnailsWrapperHeight: number, isThumbnailVertical: boolean, numberItems: number) => number;
 export declare const getTranslateXForTwoSlide: (index: number, currentIndex: number, currentSlideOffset: number, previousIndex: number) => number;
